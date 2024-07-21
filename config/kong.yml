@@ -1,0 +1,15 @@
+_format_version: "2.1"
+
+services:
+  - name: service1
+    url: http://app1:5001
+    routes:
+      - name: route1
+        paths:
+          - /service1
+  - name: service2
+    url: http://app2:5002
+    routes:
+      - name: route2
+        paths:
+          - /service2

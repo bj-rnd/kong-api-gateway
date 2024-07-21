@@ -1,0 +1,30 @@
+version: '3.3'
+
+services:
+  kong:
+    image: kong:latest
+    container_name: telecash-api-gateway-kong
+    volumes:
+      - "./config:/usr/local/kong/declarative"
+    environment:
+      - KONG_DATABASE=off
+      - KONG_DECLARATIVE_CONFIG=/usr/local/kong/declarative/kong.yml
+      - KONG_PROXY_ACCESS_LOG=/dev/stdout
+      - KONG_ADMIN_ACCESS_LOG=/dev/stdout
+      - KONG_PROXY_ERROR_LOG=/dev/stderr
+      - KONG_ADMIN_ERROR_LOG=/dev/stderr
+      - KONG_ADMIN_LISTEN=0.0.0.0:8001, 0.0.0.0:8444 ssl
+      - KONG_LOG_LEVEL=debug
+      - KONG_PLUGINS=bundled
+    ports:
+      - "3000:8000/tcp"
+#      - "127.0.0.1:7990:8001/tcp"
+
+  express-app:
+    build:
+      context: ./express-app
+      dockerfile: dockerfile
+    ports:
+      - "${PORT}:${PORT}"  # Map the container's port 3000 to the host port defined by the PORT environment variable
+    environment:
+      - PORT=${PORT}       # Define the port to use in the container
